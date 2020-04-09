@@ -4,9 +4,11 @@ import { AppContainer } from 'react-hot-loader';
 import { HashRouter as Router, Route, Switch, withRouter } from 'react-router-dom';
 import { log } from '@Utils';
 import Pins from './Pins';
+import TabList from './pages/TabList';
 
 import { Provider } from '@Contexts';
-import { Counter } from '@Components';
+// import { Counter } from '@Components';
+import { Cards } from '@Components';
 // import CustomHooks from './CustomHooks';
 
 import '../public/css/main.css';
@@ -41,7 +43,8 @@ ReactDOM.render(
           <WTest />
           <WTestDiv />
           <Switch>
-            <Route key={'homepage'} exact path={'/'} component={Counter} />
+            <Route key={'homepage'} exact path={'/'} component={Cards} />
+            {/* <Route key={'homepage'} exact path={'/'} component={TabList} /> */}
             <Route key={'pins'} path={'/pins'} component={Pins} />
           </Switch>
         </React.Fragment>

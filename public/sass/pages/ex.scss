@@ -1,0 +1,54 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+$exPrefix: 'ex';
+
+.#{$exPrefix}-router-cards {
+  position: relative;
+  margin-top: 40px;
+  // perspective: 1050px;
+  perspective: 2120px;
+  transform-style: preserve-3d;
+}
+
+.#{$exPrefix}-router-card {
+  position: absolute;
+  left: 50%;
+  width: 320px;
+  height: 162px;
+  transform: translateX(-50%);
+  transition: all 0.36s ease-in-out;
+}
+
+$nCards: 7;
+
+@mixin cards() {
+  @for $i from 0 to $nCards {
+    .#{$exPrefix}-router-card-#{$i} {
+      transform: translateX(-50%) translateY($i * 40px) translateZ(($i + 1) * 300px - $nCards * 300px);
+      z-index: $i + 1;
+    }
+  }
+}
+
+@include cards();
+
+.ex-iframe {
+  border: none!important;
+  display: block!important;
+  position: fixed!important;
+  height: 100%!important;
+  width: 100%!important;
+  top: 0!important;
+  right: 0!important;
+  bottom: 0!important;
+  left: 0!important;
+  margin: 0!important;
+  clip: auto!important;
+  opacity: 1!important;
+  z-index: 9223372036854775807;
+  background: rgba(0, 0, 0, 0.7);
+}
