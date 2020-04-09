@@ -20,21 +20,59 @@ $exPrefix: 'ex';
   width: 320px;
   height: 162px;
   transform: translateX(-50%);
-  transition: all 0.36s ease-in-out;
+  transition: transform 0.36s ease-in-out;
 }
 
-$nCards: 7;
 
-@mixin cards() {
-  @for $i from 0 to $nCards {
-    .#{$exPrefix}-router-card-#{$i} {
-      transform: translateX(-50%) translateY($i * 40px) translateZ(($i + 1) * 300px - $nCards * 300px);
+@mixin cards($prefix, $n) {
+  @for $i from 0 to $n {
+    .#{$prefix}-router-card-#{$i} {
+      transform: translateX(-50%) translateY($i * 40px) translateZ(($i + 1) * 300px - $n * 300px);
       z-index: $i + 1;
+    }
+  }
+
+  .#{$prefix}-router-card-leave {
+    // transform: translateX(-50%) translateY($n * 40px) translateZ(0);
+    z-index: $n + 1;
+    animation-duration: .36s;
+    animation-fill-mode: both;
+    animation-play-state: paused;
+    // animation-timing-function: cubic-bezier(.6,.04,.98,.34);
+  }
+  .#{$prefix}-router-card-leave.#{$prefix}-router-card-leave-active {
+    animation-name: MoveDownLeave;
+    animation-play-state: running;
+    pointer-events: none
+  }
+
+  @keyframes MoveDownLeave {
+    0% {
+      // transform-origin: 0 0;
+      transform: translateX(-50%) translateY(($n - 1) * 40px) translateZ(0);
+      opacity: 1
+    }
+    50% {
+      // transform-origin: 0 0;
+      transform: translateX(-50%) translateY(($n - 1) * 40px) translateZ(0px) scale(0.2);
+      opacity: 0
+    }
+    51% {
+      transform: translateX(-50%) translateY(-40px) translateZ((0 - $n) * 300px);
+      opacity: 0
+    }
+    52% {
+      transform: translateX(-50%) translateY(-40px) translateZ((0 - $n) * 300px);
+      opacity: 1
+    }
+    100% {
+      transform: translateX(-50%) translateY(0) translateZ((1 - $n) * 300px);
+      opacity: 1
     }
   }
 }
 
-@include cards();
+@include cards($exPrefix, 7);
 
 .ex-iframe {
   border: none!important;
