@@ -31,68 +31,79 @@ let arr = [
 
 import * as React from 'react';
 
-const { useState, useEffect } = React;
+const { useState, useEffect, useRef } = React;
 
 const useCardsStatus = () => {
-  const [offset, setOffset] = useState(0);
+  const [indexArr, setIndexArr] = useState([0, 1, 2, 3, 4, 5, 6]);
+  const [locked, setLocked] = useState(false);
   const [list, setList] = useState([]);
 
-  const handleNext = () => {
-    let tmp = offset - 1;
-    if (tmp === -list.length) {
-      tmp = 0;
+  const toNext = () => {
+    if (locked) {
+      return;
     }
-    setOffset(tmp);
+    let t: Array<number> = indexArr.map(i => i);
+    let tmp = t.shift();
+    t.push(tmp);
+
+    setIndexArr(t);
   };
 
-  const handlePrev = () => {
-    let tmp = offset + 1;
-    if (tmp === list.length) {
-      tmp = 0;
+  const toPrev = () => {
+    if (locked) {
+      return;
     }
-    setOffset(tmp);
+    let t: Array<number> = indexArr.map(i => i);
+    let tmp = t.pop();
+    t.unshift(tmp);
+
+    setIndexArr(t);
   };
 
-  return { offset, list, setList, handlePrev, handleNext };
+  return { indexArr, list, setList, setLocked, toPrev, toNext };
 };
 
-// type SingleCardType = {
-//   c: string,
-//   i: number
-// };
-
 const Cards = () => {
-  const { offset, list, setList, handlePrev, handleNext } = useCardsStatus();
-
-  // const SingleCard = (props: SingleCardType) => {
-  //   const { c, i } = props;
-  //   return <div className={`ex-router-card ex-router-card-${i}`} style={{ backgroundColor: c }} />;
-  // };
-
-  const JustARenderer = () => {
-    return (
-      <>
-        {list.map((item, i) => {
-          let y = (i + offset) % list.length;
-          y = y < 0 ? y + list.length : y;
-          // return <SingleCard key={i.toString()} c={item.color} i={y} />;
-          return <div className={`ex-router-card ex-router-card-${y}`} style={{ backgroundColor: item.color }} data-index={i} />;
-        })}
-      </>
-    );
-  };
+  const [initFlag, setInitFlag] = useState(true);
+  const { indexArr, list, setList, setLocked, toPrev, toNext } = useCardsStatus();
+  let tmpNode = useRef(null);
 
   useEffect(() => {
     setList(arr);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (initFlag) {
+      setInitFlag(false);
+      return;
+    }
+    setLocked(true);
+    tmpNode.current.addEventListener('animationend', () => {
+      tmpNode.current.className = 'ex-router-card ex-router-card-0';
+      setLocked(false);
+    });
+
+    tmpNode.current.classList.add('ex-router-card-leave-active');
+  }, [initFlag, indexArr, setLocked]);
+
   return (
-    <div className='ex-router-cards' onClick={handleNext}>
-      <JustARenderer />
+    <div className='ex-iframe'>
+      <div className='ex-router-cards-wrap'>
+        <div className='ex-router-cards' onClick={toNext}>
+          {list.map((item, i) => {
+            let tmpClassName = `ex-router-card ex-router-card-${indexArr[i]}`;
+            if (indexArr[i] === 0) {
+              tmpClassName = `ex-router-card ex-router-card-${list.length - 1} ex-router-card-leave`;
+              return <div key={i.toString()} className={tmpClassName} style={{ backgroundColor: item.color }} data-index={i} ref={tmpNode} />;
+            } else {
+              return <div key={i.toString()} className={tmpClassName} style={{ backgroundColor: item.color }} data-index={i} />;
+            }
+          })}
+        </div>
+      </div>
     </div>
   );
 };
 
-import Cards2 from './test';
-export default Cards2;
+export default Cards;

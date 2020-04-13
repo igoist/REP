@@ -6,10 +6,17 @@
 
 $exPrefix: 'ex';
 
+.#{$exPrefix}-router-cards-wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 320px;
+  height: 420px;
+  transform: translateX(-50%) translateY(-50%);
+}
+
 .#{$exPrefix}-router-cards {
   position: relative;
-  margin-top: 40px;
-  // perspective: 1050px;
   perspective: 2120px;
   transform-style: preserve-3d;
 }
@@ -24,16 +31,17 @@ $exPrefix: 'ex';
 }
 
 
-@mixin cards($prefix, $n) {
+@mixin cards($prefix, $n, $y, $z) {
   @for $i from 0 to $n {
     .#{$prefix}-router-card-#{$i} {
-      transform: translateX(-50%) translateY($i * 40px) translateZ(($i + 1) * 300px - $n * 300px);
+      // transform: translateX(-50%) translateY($i * $y) translateZ(($i + 1) * 300px - $n * 300px);
+      transform: translateX(-50%) translateY($i * $y) translateZ(($i + 1) * $z - $n * $z);
       z-index: $i + 1;
     }
   }
 
   .#{$prefix}-router-card-leave {
-    // transform: translateX(-50%) translateY($n * 40px) translateZ(0);
+    // transform: translateX(-50%) translateY($n * $y) translateZ(0);
     z-index: $n + 1;
     animation-duration: .36s;
     animation-fill-mode: both;
@@ -49,30 +57,30 @@ $exPrefix: 'ex';
   @keyframes MoveDownLeave {
     0% {
       // transform-origin: 0 0;
-      transform: translateX(-50%) translateY(($n - 1) * 40px) translateZ(0);
+      transform: translateX(-50%) translateY(($n - 1) * $y) translateZ(0);
       opacity: 1
     }
     50% {
       // transform-origin: 0 0;
-      transform: translateX(-50%) translateY(($n - 1) * 40px) translateZ(0px) scale(0.2);
+      transform: translateX(-50%) translateY(($n - 1) * $y) translateZ(0px) scale(0.2);
       opacity: 0
     }
     51% {
-      transform: translateX(-50%) translateY(-40px) translateZ((0 - $n) * 300px);
+      transform: translateX(-50%) translateY(-$y) translateZ((0 - $n) * $z);
       opacity: 0
     }
     52% {
-      transform: translateX(-50%) translateY(-40px) translateZ((0 - $n) * 300px);
+      transform: translateX(-50%) translateY(-$y) translateZ((0 - $n) * $z);
       opacity: 1
     }
     100% {
-      transform: translateX(-50%) translateY(0) translateZ((1 - $n) * 300px);
+      transform: translateX(-50%) translateY(0) translateZ((1 - $n) * $z);
       opacity: 1
     }
   }
 }
 
-@include cards($exPrefix, 7);
+@include cards($exPrefix, 7, 40px, 300px);
 
 .ex-iframe {
   border: none!important;
