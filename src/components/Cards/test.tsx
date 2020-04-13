@@ -29,53 +29,51 @@ let arr = [
   }
 ];
 
+declare var chrome: any;
+
 import * as React from 'react';
 
-const { useState, useEffect, useRef } = React;
+const { useEffect, useRef } = React;
 
-const useCardsStatus = () => {
-  const [indexArr, setIndexArr] = useState([0, 1, 2, 3, 4, 5, 6]);
-  const [locked, setLocked] = useState(false);
-  const [list, setList] = useState([]);
-
-  const toNext = () => {
-    if (locked) {
-      return;
-    }
-    let t: Array<number> = indexArr.map(i => i);
-    let tmp = t.shift();
-    t.push(tmp);
-
-    setIndexArr(t);
-  };
-
-  const toPrev = () => {
-    if (locked) {
-      return;
-    }
-    let t: Array<number> = indexArr.map(i => i);
-    let tmp = t.pop();
-    t.unshift(tmp);
-
-    setIndexArr(t);
-  };
-
-  return { indexArr, list, setList, setLocked, toPrev, toNext };
-};
+import useCardsStatus from './useCardsStatus';
 
 const Cards = () => {
-  const [initFlag, setInitFlag] = useState(true);
-  const { indexArr, list, setList, setLocked, toPrev, toNext } = useCardsStatus();
+  const { initFlag, indexArr, list, setList, setLocked, toPrev, toNext } = useCardsStatus();
   let tmpNode = useRef(null);
+  let tmpNodePrev: any = useRef(null);
+  let tmpNodeNext: any = useRef(null);
+
+  const handleKeyDown = (e: any) => {
+    if (e.key === 'j' || e.key === 'J') {
+      tmpNodeNext && tmpNodeNext.current && tmpNodeNext.current.click();
+    }
+    if (e.key === 'k' || e.key === 'K') {
+      tmpNodePrev && tmpNodePrev.current && tmpNodePrev.current.click();
+    }
+  };
 
   useEffect(() => {
     setList(arr);
+
+    const exId = 'kfajbgpmhinphopgjjempdcgihajeejb';
+
+    let msg = {
+      to: 'huaban-bg',
+      me: 'ExCards',
+      via: 'none'
+    };
+
+    // let msg = JSON.stringify(o);
+
+    chrome.runtime.sendMessage(exId, msg);
+
+    document.addEventListener('keydown', handleKeyDown, false);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (initFlag) {
-      setInitFlag(false);
       return;
     }
     setLocked(true);
@@ -90,10 +88,12 @@ const Cards = () => {
   return (
     <div className='ex-iframe'>
       <div className='ex-router-cards-wrap'>
+        <div className='ex-div-trick-prev' onClick={toPrev} ref={tmpNodePrev} />
+        <div className='ex-div-trick-next' onClick={toNext} ref={tmpNodeNext} />
         <div className='ex-router-cards' onClick={toNext}>
           {list.map((item, i) => {
             let tmpClassName = `ex-router-card ex-router-card-${indexArr[i]}`;
-            if (indexArr[i] === 0) {
+            if (indexArr[i] === 0 && !initFlag) {
               tmpClassName = `ex-router-card ex-router-card-${list.length - 1} ex-router-card-leave`;
               return <div key={i.toString()} className={tmpClassName} style={{ backgroundColor: item.color }} data-index={i} ref={tmpNode} />;
             } else {

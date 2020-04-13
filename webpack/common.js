@@ -3,15 +3,8 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const publicPath = '/';
-const srcPath = './src';
 
 const webpackConfig = {
-  entry: {
-    index: ['react-hot-loader/patch', path.resolve(path.resolve(__dirname, '..'), path.resolve(srcPath, 'index.tsx'))]
-  },
-
-  // target: 'electron-renderer',
-
   resolve: {
     alias: {
       '@Layouts': path.resolve(path.resolve(__dirname, '..'), 'src/layouts/'),
@@ -21,11 +14,6 @@ const webpackConfig = {
     },
     extensions: ['.ts', '.tsx', '.js']
   },
-
-  // externals: {
-  //   'react': 'React',
-  //   'react-dom': 'ReactDOM',
-  // },
 
   output: {
     filename: '[name].[hash:8].js',
@@ -39,6 +27,12 @@ const webpackConfig = {
         test: /\.(ts|tsx)?$/,
         // test: /\.ts(x)$/,
         loader: ['babel-loader', 'ts-loader'],
+        exclude: /node_modules/
+      },
+      {
+        test: /\.(js|jsx)?$/,
+        // test: /\.ts(x)$/,
+        loader: ['babel-loader'],
         exclude: /node_modules/
       },
       {

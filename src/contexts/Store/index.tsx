@@ -30,7 +30,7 @@ const useStore = () => {
     current: -1
   });
 
-  const pushStore = (newStore: any, setMethod: (state: any) => void) => {
+  const pushStore = (newStore: any, setMethod?: (state: any) => void) => {
     if (storeState.current === storeState.storeList.length - 1) {
       setStore({
         storeList: [...storeState.storeList, newStore],
@@ -44,18 +44,21 @@ const useStore = () => {
         current: storeState.current + 1
       });
     }
-
-    setMethod(newStore);
+    if (setMethod) {
+      setMethod(newStore);
+    }
   };
 
-  const toPrevStore = (setMethod: (state: any) => void) => {
+  const toPrevStore = (setMethod?: (state: any) => void) => {
     if (storeState.current > 0) {
       setStore({
         storeList: storeState.storeList,
         current: storeState.current - 1
       });
 
-      setMethod(storeState.storeList[storeState.current - 1]);
+      if (setMethod) {
+        setMethod(storeState.storeList[storeState.current - 1]);
+      }
     } else {
       log.dev({
         title: 'toPrevStore',

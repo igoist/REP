@@ -24,6 +24,7 @@ $exPrefix: 'ex';
 .#{$exPrefix}-router-card {
   position: absolute;
   left: 50%;
+  border-radius: 8px;
   width: 320px;
   height: 162px;
   transform: translateX(-50%);
@@ -33,22 +34,19 @@ $exPrefix: 'ex';
 
 @mixin cards($prefix, $n, $y, $z) {
   @for $i from 0 to $n {
-    .#{$prefix}-router-card-#{$i} {
-      // transform: translateX(-50%) translateY($i * $y) translateZ(($i + 1) * 300px - $n * 300px);
+    .#{$prefix}-#{$i} {
       transform: translateX(-50%) translateY($i * $y) translateZ(($i + 1) * $z - $n * $z);
       z-index: $i + 1;
     }
   }
 
-  .#{$prefix}-router-card-leave {
-    // transform: translateX(-50%) translateY($n * $y) translateZ(0);
+  .#{$prefix}-leave {
     z-index: $n + 1;
     animation-duration: .36s;
     animation-fill-mode: both;
     animation-play-state: paused;
-    // animation-timing-function: cubic-bezier(.6,.04,.98,.34);
   }
-  .#{$prefix}-router-card-leave.#{$prefix}-router-card-leave-active {
+  .#{$prefix}-leave.#{$prefix}-leave-active {
     animation-name: MoveDownLeave;
     animation-play-state: running;
     pointer-events: none
@@ -80,7 +78,7 @@ $exPrefix: 'ex';
   }
 }
 
-@include cards($exPrefix, 7, 40px, 300px);
+@include cards($exPrefix + '-router-card', 7, 40px, 300px);
 
 .ex-iframe {
   border: none!important;
