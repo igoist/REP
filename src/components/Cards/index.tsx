@@ -39,22 +39,35 @@ import useCardsStatus from './useCardsStatus';
 const Cards = () => {
   const { initFlag, indexArr, list, setList, setLocked, toPrev, toNext } = useCardsStatus();
   let tmpNode = useRef(null);
+  let tmpNodePrev: any = useRef(null);
+  let tmpNodeNext: any = useRef(null);
+
+  const handleKeyDown = (e: any) => {
+    if (e.key === 'j' || e.key === 'J') {
+      tmpNodeNext && tmpNodeNext.current && tmpNodeNext.current.click();
+    }
+    if (e.key === 'k' || e.key === 'K') {
+      tmpNodePrev && tmpNodePrev.current && tmpNodePrev.current.click();
+    }
+  };
 
   useEffect(() => {
     setList(arr);
 
-    const exId = 'kfajbgpmhinphopgjjempdcgihajeejb';
+    // const exId = 'kfajbgpmhinphopgjjempdcgihajeejb';
 
-    let o = {
-      to: 'huaban-bg',
-      me: 'cxXXX',
-      via: 'cxxX'
-    };
+    // let o = {
+    //   to: 'huaban-bg',
+    //   me: 'cxXXX',
+    //   via: 'cxxX'
+    // };
 
-    // let msg = JSON.stringify(o);
-    let msg = o;
+    // // let msg = JSON.stringify(o);
+    // let msg = o;
 
-    chrome.runtime.sendMessage(exId, msg);
+    // chrome.runtime.sendMessage(exId, msg);
+
+    document.addEventListener('keydown', handleKeyDown, false);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -72,10 +85,20 @@ const Cards = () => {
     tmpNode.current.classList.add('ex-router-card-leave-active');
   }, [initFlag, indexArr, setLocked]);
 
+  let tagI: number | null = null;
+  for (let i = 0; i < indexArr.length; i++) {
+    if (indexArr[i] === 0) {
+      tagI = i;
+    }
+  }
+
   return (
     <div className='ex-iframe'>
       <div className='ex-router-cards-wrap'>
+        <div className='ex-div-trick-prev' onClick={toPrev} ref={tmpNodePrev} />
+        <div className='ex-div-trick-next' onClick={toNext} ref={tmpNodeNext} />
         <div className='ex-router-cards' onClick={toNext}>
+          {list.length && <div key={'-1'} className={'ex-router-card ex-router-card-x'} style={{ backgroundColor: list[tagI].color }} data-index={-1} />}
           {list.map((item, i) => {
             let tmpClassName = `ex-router-card ex-router-card-${indexArr[i]}`;
             if (indexArr[i] === 0 && !initFlag) {

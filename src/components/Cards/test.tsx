@@ -29,6 +29,8 @@ let arr = [
   }
 ];
 
+const exId = 'kfajbgpmhinphopgjjempdcgihajeejb';
+
 declare var chrome: any;
 
 import * as React from 'react';
@@ -44,6 +46,13 @@ const Cards = () => {
   let tmpNodeNext: any = useRef(null);
 
   const handleKeyDown = (e: any) => {
+    if (e.key.toLowerCase === 'escape') {
+      let msg = {
+        to: 'huaban-bg',
+        act: 'closeREPartner'
+      };
+      chrome.runtime.sendMessage(exId, msg);
+    }
     if (e.key === 'j' || e.key === 'J') {
       tmpNodeNext && tmpNodeNext.current && tmpNodeNext.current.click();
     }
@@ -54,9 +63,6 @@ const Cards = () => {
 
   useEffect(() => {
     setList(arr);
-
-    const exId = 'kfajbgpmhinphopgjjempdcgihajeejb';
-
     let msg = {
       to: 'huaban-bg',
       me: 'ExCards',
@@ -85,12 +91,20 @@ const Cards = () => {
     tmpNode.current.classList.add('ex-router-card-leave-active');
   }, [initFlag, indexArr, setLocked]);
 
+  let tagI: number | null = null;
+  for (let i = 0; i < indexArr.length; i++) {
+    if (indexArr[i] === 0) {
+      tagI = i;
+    }
+  }
+
   return (
     <div className='ex-iframe'>
       <div className='ex-router-cards-wrap'>
         <div className='ex-div-trick-prev' onClick={toPrev} ref={tmpNodePrev} />
         <div className='ex-div-trick-next' onClick={toNext} ref={tmpNodeNext} />
         <div className='ex-router-cards' onClick={toNext}>
+          {list.length && <div key={'-1'} className={'ex-router-card ex-router-card-x'} style={{ backgroundColor: list[tagI].color }} data-index={-1} />}
           {list.map((item, i) => {
             let tmpClassName = `ex-router-card ex-router-card-${indexArr[i]}`;
             if (indexArr[i] === 0 && !initFlag) {

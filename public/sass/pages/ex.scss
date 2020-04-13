@@ -39,6 +39,10 @@ $exPrefix: 'ex';
       z-index: $i + 1;
     }
   }
+  .#{$prefix}-x {
+    transform: translateX(-50%) translateY(0) translateZ((1 - $n) * $z);
+    z-index: 0;
+  }
 
   .#{$prefix}-leave {
     z-index: $n + 1;
@@ -63,12 +67,20 @@ $exPrefix: 'ex';
       transform: translateX(-50%) translateY(($n - 1) * $y) translateZ(0px) scale(0.2);
       opacity: 0
     }
+    // 51% {
+    //   transform: translateX(-50%) translateY(-$y) translateZ((0 - $n) * $z);
+    //   opacity: 0
+    // }
+    // 52% {
+    //   transform: translateX(-50%) translateY(-$y) translateZ((0 - $n) * $z);
+    //   opacity: 1
+    // }
     51% {
-      transform: translateX(-50%) translateY(-$y) translateZ((0 - $n) * $z);
+      transform: translateX(-50%) translateY(0) translateZ((0 - $n) * $z);
       opacity: 0
     }
     52% {
-      transform: translateX(-50%) translateY(-$y) translateZ((0 - $n) * $z);
+      transform: translateX(-50%) translateY(0) translateZ((0 - $n) * $z);
       opacity: 1
     }
     100% {
