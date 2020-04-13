@@ -29,15 +29,13 @@ let arr = [
   }
 ];
 
-const exId = 'kfajbgpmhinphopgjjempdcgihajeejb';
-
 declare var chrome: any;
 
 import * as React from 'react';
+import useCardsStatus from './useCardsStatus';
+import { EX, EXID } from '@Utils';
 
 const { useEffect, useRef } = React;
-
-import useCardsStatus from './useCardsStatus';
 
 const Cards = () => {
   const { initFlag, indexArr, list, setList, setLocked, toPrev, toNext } = useCardsStatus();
@@ -46,12 +44,12 @@ const Cards = () => {
   let tmpNodeNext: any = useRef(null);
 
   const handleKeyDown = (e: any) => {
-    if (e.key.toLowerCase === 'escape') {
+    if (e.key.toLowerCase() === 'escape') {
       let msg = {
         to: 'huaban-bg',
-        act: 'closeREPartner'
+        act: 'readyToCloseREPartner'
       };
-      chrome.runtime.sendMessage(exId, msg);
+      chrome.runtime.sendMessage(EXID, msg);
     }
     if (e.key === 'j' || e.key === 'J') {
       tmpNodeNext && tmpNodeNext.current && tmpNodeNext.current.click();
@@ -71,7 +69,7 @@ const Cards = () => {
 
     // let msg = JSON.stringify(o);
 
-    chrome.runtime.sendMessage(exId, msg);
+    chrome.runtime.sendMessage(EXID, msg);
 
     document.addEventListener('keydown', handleKeyDown, false);
 
@@ -99,7 +97,7 @@ const Cards = () => {
   }
 
   return (
-    <div className='ex-iframe'>
+    <>
       <div className='ex-router-cards-wrap'>
         <div className='ex-div-trick-prev' onClick={toPrev} ref={tmpNodePrev} />
         <div className='ex-div-trick-next' onClick={toNext} ref={tmpNodeNext} />
@@ -116,7 +114,7 @@ const Cards = () => {
           })}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -107,4 +107,9 @@ $exPrefix: 'ex';
   opacity: 1!important;
   z-index: 9223372036854775807;
   background: rgba(0, 0, 0, 0.7);
+  transition: opacity 0.24s ease-in-out;
+
+  &.is-hidden {
+    opacity: 0!important;
+  }
 }
