@@ -44,37 +44,34 @@ $exPrefix: 'ex';
     z-index: 0;
   }
 
+  .#{$prefix}-enter,
   .#{$prefix}-leave {
     z-index: $n + 1;
     animation-duration: .36s;
     animation-fill-mode: both;
     animation-play-state: paused;
   }
+  .#{$prefix}-enter.#{$prefix}-enter-active,
   .#{$prefix}-leave.#{$prefix}-leave-active {
-    animation-name: MoveDownLeave;
     animation-play-state: running;
     pointer-events: none
   }
+  .#{$prefix}-leave.#{$prefix}-leave-active {
+    animation-name: CardLeave;
+  }
+  .#{$prefix}-enter.#{$prefix}-enter-active {
+    animation-name: CardEnter;
+  }
 
-  @keyframes MoveDownLeave {
+  @keyframes CardLeave {
     0% {
-      // transform-origin: 0 0;
       transform: translateX(-50%) translateY(($n - 1) * $y) translateZ(0);
       opacity: 1
     }
     50% {
-      // transform-origin: 0 0;
       transform: translateX(-50%) translateY(($n - 1) * $y) translateZ(0px) scale(0.2);
       opacity: 0
     }
-    // 51% {
-    //   transform: translateX(-50%) translateY(-$y) translateZ((0 - $n) * $z);
-    //   opacity: 0
-    // }
-    // 52% {
-    //   transform: translateX(-50%) translateY(-$y) translateZ((0 - $n) * $z);
-    //   opacity: 1
-    // }
     51% {
       transform: translateX(-50%) translateY(0) translateZ((0 - $n) * $z);
       opacity: 0
@@ -85,6 +82,20 @@ $exPrefix: 'ex';
     }
     100% {
       transform: translateX(-50%) translateY(0) translateZ((1 - $n) * $z);
+      opacity: 1
+    }
+  }
+  @keyframes CardEnter {
+    0% {
+      transform: translateX(-50%) translateY(0) translateZ((1 - $n) * $z);
+      opacity: 0
+    }
+    1% {
+      transform: translateX(-50%) translateY(($n - 1) * $y) translateZ(0px) scale(0.2);
+      opacity: 0
+    }
+    100% {
+      transform: translateX(-50%) translateY(($n - 1) * $y) translateZ(0px) scale(1);
       opacity: 1
     }
   }
