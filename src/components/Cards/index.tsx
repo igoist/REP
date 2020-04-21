@@ -33,75 +33,73 @@ declare var window: any;
 
 import * as React from 'react';
 
-const { useState, useEffect, useRef } = React;
+const { useEffect, useRef } = React;
 
 import useCardsStatus from './useCardsStatus';
 
 const Cards = () => {
-  const { initFlag, indexArr, list, setList, setLocked, toPrev, toNext } = useCardsStatus();
-  const [isNextOrNot, setIsNextOrNot] = useState(false);
+  const { cardsState, list, setList, toPrev, toNext, setLocked } = useCardsStatus();
+
   let tmpNode = useRef(null);
   let tmpNodePrev: any = useRef(null);
   let tmpNodeNext: any = useRef(null);
 
+  const { indexArr, initFlag, isNextOrNot, locked } = cardsState;
+
+  const handleToNext = () => {
+    tmpNodeNext && tmpNodeNext.current && tmpNodeNext.current.click();
+  };
+
+  const handleToPrev = () => {
+    tmpNodePrev && tmpNodePrev.current && tmpNodePrev.current.click();
+  };
+
   const handleKeyDown = (e: any) => {
     if (e.key === 'j' || e.key === 'J') {
-      setIsNextOrNot(true);
-      tmpNodeNext && tmpNodeNext.current && tmpNodeNext.current.click();
+      handleToNext();
     }
     if (e.key === 'k' || e.key === 'K') {
-      setIsNextOrNot(false);
-      tmpNodePrev && tmpNodePrev.current && tmpNodePrev.current.click();
+      handleToPrev();
     }
   };
 
   useEffect(() => {
     setList(arr);
 
-    // const exId = 'kfajbgpmhinphopgjjempdcgihajeejb';
-
-    // let o = {
-    //   to: 'huaban-bg',
-    //   me: 'cxXXX',
-    //   via: 'cxxX'
-    // };
-
-    // // let msg = JSON.stringify(o);
-    // let msg = o;
-
-    // chrome.runtime.sendMessage(exId, msg);
-
     document.addEventListener('keydown', handleKeyDown, false);
 
-    document.querySelector('.ex-iframe.is-hidden').classList.remove('is-hidden');
+    let iframeWrap = document.querySelector('.ex-iframe.is-hidden');
+    iframeWrap && iframeWrap.classList.remove('is-hidden');
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  window.func = () => {
-    setIsNextOrNot(true);
-  };
-
   useEffect(() => {
+    // console.log('enter test: ', indexArr, initFlag, isNextOrNot, locked);
     if (initFlag) {
       return;
     }
-    setLocked(true);
-    tmpNode.current.addEventListener('animationend', () => {
-      if (isNextOrNot) {
-        tmpNode.current.className = 'ex-router-card ex-router-card-0';
-      } else {
-        tmpNode.current.className = `ex-router-card ex-router-card-${indexArr.length - 1}`;
-      }
-      setLocked(false);
-    });
+    if (!locked && (tmpNode.current.classList.contains('ex-router-card-leave') || tmpNode.current.classList.contains('ex-router-card-enter'))) {
+      setLocked(true);
 
-    if (isNextOrNot) {
-      tmpNode.current.classList.add('ex-router-card-leave-active');
-    } else {
-      tmpNode.current.classList.add('ex-router-card-enter-active');
+      const handleEnd = () => {
+        if (isNextOrNot) {
+          tmpNode.current.className = 'ex-router-card ex-router-card-0';
+        } else {
+          tmpNode.current.className = `ex-router-card ex-router-card-${indexArr.length - 1}`;
+        }
+        tmpNode.current.removeEventListener('animationend', handleEnd);
+        setLocked(false);
+      };
+      tmpNode.current.addEventListener('animationend', handleEnd);
+
+      if (isNextOrNot) {
+        tmpNode.current.classList.add('ex-router-card-leave-active');
+      } else {
+        tmpNode.current.classList.add('ex-router-card-enter-active');
+      }
     }
-  }, [isNextOrNot, initFlag, indexArr, setLocked]);
+  }, [indexArr, initFlag, isNextOrNot, locked, setLocked]);
 
   let tagI: number | null = null;
   for (let i = 0; i < indexArr.length; i++) {
@@ -113,14 +111,14 @@ const Cards = () => {
     }
   }
 
-  console.log('Rerender');
+  console.log('Render: ', isNextOrNot);
 
   return (
     <div className='ex-iframe is-hidden'>
       <div className='ex-router-cards-wrap'>
         <div className='ex-div-trick-prev' onClick={toPrev} ref={tmpNodePrev} />
         <div className='ex-div-trick-next' onClick={toNext} ref={tmpNodeNext} />
-        <div className='ex-router-cards' onClick={toNext}>
+        <div className='ex-router-cards' onClick={handleToNext}>
           {list.length && <div key={'-1'} className={'ex-router-card ex-router-card-x'} style={{ backgroundColor: list[tagI].color }} data-index={-1} />}
           {list.map((item, i) => {
             let tmpClassName = `ex-router-card ex-router-card-${indexArr[i]}`;

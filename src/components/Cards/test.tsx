@@ -44,6 +44,16 @@ const Cards = () => {
   let tmpNodePrev: any = useRef(null);
   let tmpNodeNext: any = useRef(null);
 
+  const handleToNext = () => {
+    setIsNextOrNot(true);
+    tmpNodeNext && tmpNodeNext.current && tmpNodeNext.current.click();
+  };
+
+  const handleToPrev = () => {
+    setIsNextOrNot(false);
+    tmpNodePrev && tmpNodePrev.current && tmpNodePrev.current.click();
+  };
+
   const handleKeyDown = (e: any) => {
     if (e.key.toLowerCase() === 'escape') {
       let msg = {
@@ -53,12 +63,10 @@ const Cards = () => {
       chrome.runtime.sendMessage(EXID, msg);
     }
     if (e.key === 'j' || e.key === 'J') {
-      setIsNextOrNot(true);
-      tmpNodeNext && tmpNodeNext.current && tmpNodeNext.current.click();
+      handleToNext();
     }
     if (e.key === 'k' || e.key === 'K') {
-      setIsNextOrNot(false);
-      tmpNodePrev && tmpNodePrev.current && tmpNodePrev.current.click();
+      handleToPrev();
     }
   };
 
@@ -115,7 +123,7 @@ const Cards = () => {
       <div className='ex-router-cards-wrap'>
         <div className='ex-div-trick-prev' onClick={toPrev} ref={tmpNodePrev} />
         <div className='ex-div-trick-next' onClick={toNext} ref={tmpNodeNext} />
-        <div className='ex-router-cards' onClick={toNext}>
+        <div className='ex-router-cards' onClick={handleToNext}>
           {list.length && <div key={'-1'} className={'ex-router-card ex-router-card-x'} style={{ backgroundColor: list[tagI].color }} data-index={-1} />}
           {list.map((item, i) => {
             let tmpClassName = `ex-router-card ex-router-card-${indexArr[i]}`;
