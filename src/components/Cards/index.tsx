@@ -36,6 +36,7 @@ import * as React from 'react';
 const { useEffect, useRef } = React;
 
 import useCardsStatus from './useCardsStatus';
+import KeyMenu from '../KeyMenu';
 
 const Cards = () => {
   const { cardsState, list, setList, toPrev, toNext, setLocked } = useCardsStatus();
@@ -134,6 +135,8 @@ const Cards = () => {
           })}
         </div>
       </div>
+
+      <KeyMenu />
     </div>
   );
 };

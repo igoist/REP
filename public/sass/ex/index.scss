@@ -1,10 +1,6 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-$exPrefix: 'ex';
+@import '_variable';
+@import '_reset';
+@import '_keyMenu';
 
 .#{$exPrefix}-router-cards-wrap {
   position: absolute;
@@ -30,7 +26,6 @@ $exPrefix: 'ex';
   transform: translateX(-50%);
   transition: transform 0.36s ease-in-out;
 }
-
 
 @mixin cards($prefix, $n, $y, $z) {
   @for $i from 0 to $n {
@@ -103,7 +98,7 @@ $exPrefix: 'ex';
 
 @include cards($exPrefix + '-router-card', 7, 40px, 300px);
 
-.ex-iframe {
+.#{$exPrefix}-iframe {
   border: none!important;
   display: block!important;
   position: fixed!important;

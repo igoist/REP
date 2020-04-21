@@ -1,0 +1,26 @@
+$exPrefix: 'ex';
+// $exThemeColor0: #f05050;
+// $exThemeColor1: #ff9900;
+// $exThemeColor2: #ffd52e;
+// $exThemeColor3: #49dd8e;
+// $exThemeColor4: #a8f0aa;
+// $exThemeColor5: #58b3ff;
+// $exThemeColor6: #ae99ff;
+
+$exThemeColors: (
+  0: #f05050,
+  1: #ff9900,
+  2: #ffd52e,
+  3: #49dd8e,
+  4: #a8f0aa,
+  5: #58b3ff,
+  6: #ae99ff
+);
+
+
+.#{$exPrefix}-bounce {
+  transition: transform 0.24s ease-in-out;
+  &:active {
+    transform: scale(0.86);
+  }
+}
