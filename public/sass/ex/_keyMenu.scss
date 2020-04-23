@@ -9,11 +9,16 @@ $prefix: $exPrefix + '-keyMenu';
         border: 1px solid map-get($exThemeColors, $i);
         box-shadow: 0 0 6px 2px map-get($exThemeColors, $i), map-get($exThemeColors, $i) 0 0 5px 3px inset;
 
-        &:hover,
-        &.active {
+        &:hover {
           // border-color: map-get($exThemeColors, $i);
           background-color: map-get($exThemeColors, $i);
           // box-shadow: 0 0 20px 3px map-get($exThemeColors, $i), map-get($exThemeColors, $i) 0 0 24px 5px inset;
+        }
+      }
+
+      &.active {
+        .#{$prefix}-btn-neon {
+          background-color: map-get($exThemeColors, $i);
         }
       }
     }
